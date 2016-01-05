@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Pong</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.js"></script>
+    <script>
+        var ballX;
+        var ballY;
+        var ballSpeedX = 5;
+        var ballSpeedY = 5;
+        var paddleHeight = 30;
+        var paddleWidth = 200; //created a variable that can be updated.
+        var score = 0; //the variable score is being initialized. 
+
+        function setup() {
+            createCanvas(800,600);
+            noCursor();
+            ballX = random (800); //here, the ball resets to a random x position everytime it restarts.
+            ballY = height / 2;
+        }
+
+        function draw() {
+            background(128,75,250);
+            moveBall();
+            checkCollide();
+            drawPaddle();
+            drawBall();
+            textSize (75);
+             text ("Score: " + score + " hits...",175,75); //score is being made into a text.
+        }
+
+        function moveBall() {
+            ballX = ballX + ballSpeedX;
+            ballY = ballY + ballSpeedY;
+
+            console.log("ballSpeedX: " + ballSpeedX + 
+                        ", ballSpeedY: " + ballSpeedY);
+        }
+
+        function checkCollide() {
+            if (ballX < 0 || ballX > width) {
+                ballSpeedX = ballSpeedX * -1;
+            }
+            if (ballY < 0) {
+                ballSpeedY = ballSpeedY * -1;
+            }
+            if (ballY > height - paddleHeight) {
+                if (ballX > mouseX && ballX < mouseX + paddleWidth) {
+                    ballSpeedY = ballSpeedY * -1;
+                    paddleWidth -= 15; //here the paddle width is being subtracted by 10 every time the ball touches the paddle.
+                    score += 1; // Everytime the ball hits the paddle, the previous score is being added by 1. 
+                    
+                    
+                }
+                else {
+                    text("GAME OVER!", width / 2, height / 2);
+                    noLoop();
+                }
+            }
+        }
+
+        function drawBall() {
+            fill (200,35,125);
+            noStroke();
+            ellipse(ballX, ballY, 20, 20);
+            
+        }
+
+        function drawPaddle() {
+            fill (0,255,250);
+            strokeWeight(4);
+            rect(mouseX, height - paddleHeight - 4, paddleWidth , paddleHeight); //I changed the width of the paddle to the variable paddleWidth so that the number can be updated in the function check collide. This will make the paddle smaller each time there's a collision
+        }
+        
+       
+        
+        
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
