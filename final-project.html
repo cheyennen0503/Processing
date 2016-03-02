@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Processing Template</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/addons/p5.dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.js"></script>
+    <script>
+        var fruits = [];
+        var lives = 8;
+        var score = 0;
+        var paddleHeight = 55;
+        var paddleWidth = 100;
+        var cloud1;
+        var cloud2;
+        var cloud3;
+
+
+        function setup() {
+            createCanvas(500, 500);
+
+            cloud1 = new Cloud();
+            cloud2 = new Cloud();
+            cloud3 = new Cloud();
+
+        }
+
+        function draw() {
+            background(189, 255, 254);
+
+
+            cloud1.move();
+            cloud1.display();
+
+            cloud2.move();
+            cloud2.display();
+
+            cloud3.move();
+            cloud3.display();
+
+
+            //ground
+            fill(60, 110, 41);
+            rect(0, 490, width, 50);
+
+            //basket 
+            noStroke();
+            fill(111, 78, 5);
+            rect(mouseX, 450, paddleWidth, paddleHeight);
+
+            for (var i = 0; i < fruits.length; i++) {
+                fruits[i].move();
+                fruits[i].display();
+                if(checkCollide(fruits[i])) {
+                    fruits.splice(i,1);
+                }
+              if (checkOffScreen(fruits[i])) {
+                fruits.splice(i,1);
+              }
+            }
+
+            if (frameCount % 25== 0) {
+                fruits.push(new Fruit());
+            }
+
+            
+          
+                      fill(0);
+            textSize(45);
+            text("Score: " + score, 25, 75);
+            text ("Lives: " + lives, 290, 75)
+
+
+        }
+
+        function Fruit() {
+            this.x = random(width);
+            this.y = random(50, 100);
+            this.r = 187;
+            this.g = 22;
+            this.b = random(255);
+            this.speed = random(3, 10);
+
+            this.move = function() {
+                this.y += this.speed;
+                this.x += random(-5,5);
+
+            }
+            this.display = function() {
+                noStroke(0);
+                fill(this.r, this.g, this.b);
+                ellipse(this.x, this.y, 25, 25);
+            }
+
+
+        }
+
+        function checkCollide(berry) {
+
+            if (berry.y > height - paddleHeight) {
+                 console.log(score)
+                if (berry.x > mouseX && berry.x < mouseX + paddleWidth) {
+                    score += 1;
+                    return true;
+
+                }
+            }
+        }
+
+        function Cloud() {
+            this.x = random(width);
+            this.y = random(100);
+            this.speed = random(4);
+
+            this.move = function() {
+                //this.x += random(10);
+                this.x += this.speed;
+                if (this.x > width) {
+                    this.x = 0;
+                }
+            }
+
+            this.display = function() {
+                fill(255);
+                noStroke();
+
+                ellipse(this.x + 60, this.y + 20, 105, 70);
+                ellipse(this.x + 50, this.y, 105, 70);
+                ellipse(this.x, this.y, 75, 70);
+                ellipse(this.x - 10, this.y + 20, 75, 70);
+
+            }
+        }
+     
+      function checkOffScreen(berry){
+        if (berry.y > height) {
+          lives -= 1;
+          if (lives == 0) {
+            noLoop();
+            textSize(45);
+            text ("GAME OVA Score: " + score,30,250);
+          }
+              
+             return true;
+        }
+        
+      }
+    </script>
+</head>
+
+<body>
+<form><input TYPE="button" onClick="history.go(0)" value="Reset"></form>
+
+
+</body>
+
+</html>
